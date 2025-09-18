@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 Ares
+# SPDX-FileCopyrightText: 2024 somenice
 #
 # SPDX-License-Identifier: MIT
 
