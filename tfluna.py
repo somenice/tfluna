@@ -33,13 +33,23 @@ class TFLuna:
 
     def _read_word(self, reg):
         result = bytearray(2)
-        self._i2c.writeto(self._address, bytes([reg]))
-        self._i2c.readfrom_into(self._address, result)
+        while not self._i2c.try_lock():
+            pass
+        try:
+            self._i2c.writeto(self._address, bytes([reg]))
+            self._i2c.readfrom_into(self._address, result)
+        finally:
+            self._i2c.unlock()
         return result[0] | (result[1] << 8)
 
     def _write_word(self, reg, value):
         data = bytes([reg, value & 0xFF, (value >> 8) & 0xFF])
-        self._i2c.writeto(self._address, data)
+        while not self._i2c.try_lock():
+            pass
+        try:
+            self._i2c.writeto(self._address, data)
+        finally:
+            self._i2c.unlock()
 
     def _read_i2c(self):
         dist = self._read_word(0x00)
